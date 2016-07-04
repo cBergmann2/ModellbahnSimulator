@@ -24,6 +24,8 @@ extern "C" void taskApplication(void *pvParameters)
 	signed portBASE_TYPE rV;	//Return Value
 	int recBuffer; 
 
+	void *startArea[2];
+
 	xQueueHandle xQHandle = initSystem();	// Init System
 
 	if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Bestätigung der Initialisierung holen

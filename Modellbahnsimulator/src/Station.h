@@ -1,0 +1,31 @@
+///////////////////////////////////////////////////////////
+//  Station.h
+//  Implementation of the Class Station
+//  Created on:      04-Jul-2016 09:47:44
+//  Original author: Christoph Bergmann
+///////////////////////////////////////////////////////////
+
+#if !defined(EA_3E0B59FF_ECA7_473b_B91A_9A66742A4F88__INCLUDED_)
+#define EA_3E0B59FF_ECA7_473b_B91A_9A66742A4F88__INCLUDED_
+
+class Station
+{
+
+public:
+	Station();
+	virtual ~Station();
+
+	int occupieStation();
+	void presenceSensorTriggered(int sensorNumber);
+	void SetSopActorActive(bool newVal);
+	void unblockStation();
+
+private:
+	/**
+	 * Als Semaphore nutzen
+	 */
+	SemaphoreHandle_t semHandle;
+	bool stopActorActive;
+
+};
+#endif // !defined(EA_3E0B59FF_ECA7_473b_B91A_9A66742A4F88__INCLUDED_)
