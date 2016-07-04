@@ -18,10 +18,18 @@
 class StartArea : public Station 
 {
 private:
+public:
+	void static taskBehavior(void*);
+
+	void setMailbox(QueueHandle_t);
+	void setCommunicationSim(xQueueHandle);
+	void setLoadingArea(LoadingArea*);
+	
+	xQueueHandle xQHandle;
+	QueueHandle_t mailboxStartArea;
 	PathSection *pSLoadingArea;
 	LoadingArea *loadingArea;
-public:
-	void taskBehavior(void*);
+	LoadingStation loadingStation1, loadingStation2;
 
 };
 #endif // !defined(EA_B806C871_42C6_449b_AEAE_0CEE62310444__INCLUDED_)

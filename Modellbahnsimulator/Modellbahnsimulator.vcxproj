@@ -82,6 +82,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Defines.h" />
     <ClInclude Include="include\FreeRTOSConfig.h" />
     <ClInclude Include="include\kernel\croutine.h" />
     <ClInclude Include="include\kernel\deprecated_definitions.h" />
@@ -102,6 +103,14 @@
     <ClInclude Include="include\trace\logTraceMacros.h" />
     <ClInclude Include="include\util\bprint.h" />
     <ClInclude Include="include\util\simCommunication.h" />
+    <ClInclude Include="src\LoadingArea.h" />
+    <ClInclude Include="src\LoadingStation.h" />
+    <ClInclude Include="src\PathSection.h" />
+    <ClInclude Include="src\StartArea.h" />
+    <ClInclude Include="src\Station.h" />
+    <ClInclude Include="src\Stations.h" />
+    <ClInclude Include="src\ThreeWaySwitch.h" />
+    <ClInclude Include="src\TwoWaySwitch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
@@ -113,9 +122,16 @@
     <ClCompile Include="src\kernel\queue.c" />
     <ClCompile Include="src\kernel\tasks.c" />
     <ClCompile Include="src\kernel\timers.c" />
+    <ClCompile Include="src\LoadingArea.cpp" />
+    <ClCompile Include="src\LoadingStation.cpp" />
+    <ClCompile Include="src\PathSection.cpp" />
+    <ClCompile Include="src\StartArea.cpp" />
+    <ClCompile Include="src\Station.cpp" />
+    <ClCompile Include="src\ThreeWaySwitch.cpp" />
     <ClCompile Include="src\trace\frtos_pipe.c" />
     <ClCompile Include="src\trace\logTraceMacros.c" />
     <ClCompile Include="src\trace\main.c" />
+    <ClCompile Include="src\TwoWaySwitch.cpp" />
     <ClCompile Include="src\util\bprint.c" />
     <ClCompile Include="src\util\simCommunication.c" />
   </ItemGroup>

@@ -10,6 +10,11 @@
 
 LoadingArea::LoadingArea(){
 	pathSection = new PathSection();
+	laodingStations[0] = new LoadingStation();
+	laodingStations[1] = new LoadingStation();
+
+	semEmptyPlaces = xSemaphoreCreateCounting(2, 2);
+
 }
 
 
@@ -19,7 +24,7 @@ LoadingArea::~LoadingArea(){
 
 
 
-LoadingStation LoadingArea::getLoadingStation(int id){
+LoadingStation* LoadingArea::getLoadingStation(int id){
 
 	return  laodingStations[id];
 }
@@ -37,12 +42,26 @@ TwoWaySwitch* LoadingArea::getSwitch(){
 }
 
 
-int LoadingArea::occupiePlaceInLoadingArea(){
+void LoadingArea::occupiePlaceInLoadingArea(){
 
-	return 0;
+	xSemaphoreTake(semEmptyPlaces, portMAX_DELAY);
 }
 
 
 void LoadingArea::unblockPlaceInLoadingArea(){
+	xSemaphoreGive(semEmptyPlaces);
+}
 
+int LoadingArea::getEmptyLoadingStation(){
+	if (!laodingStations[0]->occupied){
+		return 0;
+	}
+	else{
+		if (!laodingStations[0]->occupied){
+			return 1;
+		}
+		else{
+			return -1;
+		}
+	}
 }

@@ -9,7 +9,7 @@
 
 
 Station::Station(){
-
+	occupied = false;
 }
 
 

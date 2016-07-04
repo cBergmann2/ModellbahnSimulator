@@ -12,8 +12,10 @@ Version:	2.1.0
 #include "util\bprint.h"
 #include "util\simCommunication.h"
 #include "kernel\queue.h"
+#include "StartArea.h"
 
 #define INCLUDE_vTaskSuspend 1
+#define NO_BUFFER 4
 
 using namespace std;
 
@@ -23,10 +25,18 @@ extern "C" void taskApplication(void *pvParameters)
 	(void*)pvParameters;		// Prevent unused warning
 	signed portBASE_TYPE rV;	//Return Value
 	int recBuffer; 
+	void *startAreaInit[2];
+	UBaseType_t taskPrio;
+	QueueHandle_t mailboxStartArea;
 
-	void *startArea[2];
+	TaskHandle_t tidStartArea;
+
+	StartArea *startArea;
+	LoadingArea *loadingArea;
 
 	xQueueHandle xQHandle = initSystem();	// Init System
+	
+
 
 	if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Bestätigung der Initialisierung holen
 		/*Error*/
@@ -39,5 +49,38 @@ extern "C" void taskApplication(void *pvParameters)
 	else{
 		cout << "Verbindung zum Simulator aufgebaut" << endl;
 	}
+
+	taskPrio = uxTaskPriorityGet(NULL);
+
+	/*Create communication objects and worker tasks*/
+	startArea = new StartArea();
+	loadingArea = new LoadingArea();
+
+	startArea->setLoadingArea(loadingArea);
+
+
+	mailboxStartArea = xQueueCreate(NO_BUFFER, sizeof(int));
+	startArea->setCommunicationSim(xQHandle);
+	startArea->setMailbox(mailboxStartArea);
+	xTaskCreate(StartArea::taskBehavior, "START_AREA", 2048, (void*)startArea, taskPrio - 1, &tidStartArea);
+
+	while (true){
+		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Bestätigung der Initialisierung holen
+			/*Error*/
+			cout << "FEHLER: xQueueReceive" << endl;
+		}
+
+		switch (recBuffer){
+		case 0:
+		case 1:
+			/*START_PLACE_PRESENCE_SENSOR_INCOMING*/
+			xQueueSendToBack(mailboxStartArea, &recBuffer, portMAX_DELAY);
+			cout << "APPLICATION: Send msg to StartArea" << endl;
+			break;
+		
+		}
+	}
+
+
 
 }

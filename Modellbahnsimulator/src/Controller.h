@@ -18,7 +18,7 @@ public:
 	void setStopActor(Station station, bool activate);
 	void startDischargingProcess(int dischargingStation);
 	void startWeighingProcess();
-	startLoadingProcess(int station);
+	void startLoadingProcess(int station);
 
 };
 #endif // !defined(EA_36E3EC68_6064_484a_91A5_ABA8F0C16482__INCLUDED_)

@@ -29,7 +29,7 @@ public:
 	PathSection();
 	virtual ~PathSection();
 
-	int occupiePath();
+	void occupiePath();
 	void releasePath();
 
 private:
