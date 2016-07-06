@@ -5,13 +5,14 @@
 //  Original author: Christoph Bergmann
 ///////////////////////////////////////////////////////////
 
-#if !defined(EA_70556EA6_EF62_402f_BA8C_A6434A014298__INCLUDED_)
+#ifndef EA_70556EA6_EF62_402f_BA8C_A6434A014298__INCLUDED_
 #define EA_70556EA6_EF62_402f_BA8C_A6434A014298__INCLUDED_
 
 #include "TwoWaySwitch.h"
-#include "LoadingStation.h"
 #include "PathSection.h"
+#include "LoadingStation.h"
 
+class LoadingStation;
 class LoadingArea
 {
 private:

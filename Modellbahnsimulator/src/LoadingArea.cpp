@@ -11,8 +11,13 @@
 LoadingArea::LoadingArea(){
 	pathSection = new PathSection();
 	laodingStations[0] = new LoadingStation();
+	laodingStations[0]->setPathToLoadingStations(pathSection);
+	laodingStations[0]->SetID(1);
+	laodingStations[0]->setLoadingArea(this);
 	laodingStations[1] = new LoadingStation();
-
+	laodingStations[1]->setPathToLoadingStations(pathSection);
+	laodingStations[1]->SetID(2);
+	laodingStations[1]->setLoadingArea(this);
 	semEmptyPlaces = xSemaphoreCreateCounting(2, 2);
 
 }
@@ -57,7 +62,7 @@ int LoadingArea::getEmptyLoadingStation(){
 		return 0;
 	}
 	else{
-		if (!laodingStations[0]->occupied){
+		if (!laodingStations[1]->occupied){
 			return 1;
 		}
 		else{

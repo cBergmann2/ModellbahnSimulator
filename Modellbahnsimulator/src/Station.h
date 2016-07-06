@@ -24,7 +24,7 @@ public:
 	Station();
 	virtual ~Station();
 
-	int occupieStation();
+	void occupieStation();
 	void presenceSensorTriggered(int sensorNumber);
 	void SetSopActorActive(bool newVal);
 	void unblockStation();

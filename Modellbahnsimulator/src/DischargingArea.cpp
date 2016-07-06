@@ -19,24 +19,21 @@ DischargingArea::~DischargingArea(){
 }
 
 
-
-
-
 DischargingStation DischargingArea::getDischragingStation(int ID){
 
-	return  NULL;
+	return  this->dischargingStations[ID];
 }
 
 
-ThreeWaySwitch DischargingArea::getThreeWaySwitch(){
+ThreeWaySwitch* DischargingArea::getThreeWaySwitch(){
 
-	return  NULL;
+	return  this->threeWaySwitch;
 }
 
 
-TwoWaySwitch DischargingArea::getTwoWaySwitch(){
+TwoWaySwitch* DischargingArea::getTwoWaySwitch(){
 
-	return  NULL;
+	return  this->twoWaySwitch;
 }
 
 

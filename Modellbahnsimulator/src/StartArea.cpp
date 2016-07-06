@@ -21,7 +21,6 @@ Author:		Christoph Bergmann
 using namespace std;
 
 extern "C" void StartArea::taskBehavior(void *parms){
-	//(void*)pvParameters;		// Prevent unused warning
 	int emptyLoadingStation;
 	int recBuffer;
 	StartArea *sA = (StartArea*)parms;
@@ -39,7 +38,11 @@ extern "C" void StartArea::taskBehavior(void *parms){
 
 			sA->pSLoadingArea->occupiePath();
 
+			cout << "Startarea: Streckenabschnitt zur Beladestation blockiert" << endl;
+
 			sA->loadingArea->occupiePlaceInLoadingArea();
+
+			cout << "Startarea: Platz in Beladebereich blockiert" << endl;
 
 			emptyLoadingStation = sA->loadingArea->getEmptyLoadingStation();
 

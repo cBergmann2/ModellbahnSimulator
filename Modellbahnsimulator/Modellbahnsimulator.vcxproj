@@ -103,17 +103,23 @@
     <ClInclude Include="include\trace\logTraceMacros.h" />
     <ClInclude Include="include\util\bprint.h" />
     <ClInclude Include="include\util\simCommunication.h" />
+    <ClInclude Include="src\DischargingArea.h" />
+    <ClInclude Include="src\DischargingStation.h" />
     <ClInclude Include="src\LoadingArea.h" />
     <ClInclude Include="src\LoadingStation.h" />
     <ClInclude Include="src\PathSection.h" />
+    <ClInclude Include="src\Scales.h" />
     <ClInclude Include="src\StartArea.h" />
     <ClInclude Include="src\Station.h" />
     <ClInclude Include="src\Stations.h" />
     <ClInclude Include="src\ThreeWaySwitch.h" />
     <ClInclude Include="src\TwoWaySwitch.h" />
+    <ClInclude Include="src\WaitingArea.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\DischargingArea.cpp" />
+    <ClCompile Include="src\DischargingStation.cpp" />
     <ClCompile Include="src\kernel\croutine.c" />
     <ClCompile Include="src\kernel\event_groups.c" />
     <ClCompile Include="src\kernel\list.c" />
@@ -125,6 +131,7 @@
     <ClCompile Include="src\LoadingArea.cpp" />
     <ClCompile Include="src\LoadingStation.cpp" />
     <ClCompile Include="src\PathSection.cpp" />
+    <ClCompile Include="src\Scales.cpp" />
     <ClCompile Include="src\StartArea.cpp" />
     <ClCompile Include="src\Station.cpp" />
     <ClCompile Include="src\ThreeWaySwitch.cpp" />
@@ -134,6 +141,7 @@
     <ClCompile Include="src\TwoWaySwitch.cpp" />
     <ClCompile Include="src\util\bprint.c" />
     <ClCompile Include="src\util\simCommunication.c" />
+    <ClCompile Include="src\WaitingArea.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

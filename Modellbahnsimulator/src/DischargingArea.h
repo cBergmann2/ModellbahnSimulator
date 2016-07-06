@@ -25,8 +25,8 @@ public:
 	PathSection *pathSection;
 
 	DischargingStation getDischragingStation(int ID);
-	ThreeWaySwitch getThreeWaySwitch();
-	TwoWaySwitch getTwoWaySwitch();
+	ThreeWaySwitch* getThreeWaySwitch();
+	TwoWaySwitch* getTwoWaySwitch();
 	void occupiePathSection(int pathSection);
 	static void occupiePlaceInDischargingArea();
 	static void occupiePlaceInDischargingAreaOrWaitingArea();
@@ -34,8 +34,8 @@ public:
 	void unblockPathSection(int section);
 
 private:
-	Semaphore semDischargingArea;
-	Semaphore semDischargingAreaAndWaitingStation;
+	SemaphoreHandle_t semDischargingArea;
+	SemaphoreHandle_t semDischargingAreaAndWaitingStation;
 
 };
 #endif // !defined(EA_8714FDB4_A9FD_466e_BF44_3EC28972B799__INCLUDED_)

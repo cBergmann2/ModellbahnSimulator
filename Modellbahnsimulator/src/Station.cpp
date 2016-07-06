@@ -10,6 +10,7 @@
 
 Station::Station(){
 	occupied = false;
+	semHandle = xSemaphoreCreateCounting(1,1);
 }
 
 
@@ -25,9 +26,9 @@ Station::~Station(){
 /**
  * returns value > 0 if function was not successful
  */
-int Station::occupieStation(){
-
-	return 0;
+void Station::occupieStation(){
+	xSemaphoreTake(semHandle, portMAX_DELAY);
+	this->occupied = true;
 }
 
 
@@ -46,5 +47,6 @@ void Station::SetSopActorActive(bool newVal){
 
 
 void Station::unblockStation(){
-
+	this->occupied = false;
+	xSemaphoreGive(semHandle);
 }
