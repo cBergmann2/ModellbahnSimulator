@@ -24,6 +24,7 @@ public:
 	void setMailbox(QueueHandle_t);
 	void setCommunicationSim(xQueueHandle);
 	void setLoadingArea(LoadingArea*);
+	void errorHandling();
 	
 	xQueueHandle xQHandle;
 	QueueHandle_t mailboxStartArea;

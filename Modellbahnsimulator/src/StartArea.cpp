@@ -20,6 +20,9 @@ Author:		Christoph Bergmann
 
 using namespace std;
 
+/// <summary>
+///	 Funktion soll als eigenständige Task ausgeführt werden.
+/// </summary>
 extern "C" void StartArea::taskBehavior(void *parms){
 	int emptyLoadingStation;
 	int recBuffer;
@@ -30,57 +33,80 @@ extern "C" void StartArea::taskBehavior(void *parms){
 	
 	cout << "Startarea: betriebsbereit" << endl;
 	
-	while (true){
-		xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);
-		if (recBuffer == START_PLACE_PRESENCE_SENSOR_INCOMING){
+	
+	while (true){																			//Funktion des Startbereichs wird bis zum Ende des Programms zyklisch ausgeführt
+		xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);						//Auf ankommendes Fahrzeug warten
+		if (recBuffer == START_PLACE_PRESENCE_SENSOR_INCOMING){								
 
 			cout << "Startarea: Fahrzeug eingetroffen" << endl;
 
-			sA->pSLoadingArea->occupiePath();
+			sA->pSLoadingArea->occupiePath();												//Pfad zur Beladestation belegen
 
 			cout << "Startarea: Streckenabschnitt zur Beladestation blockiert" << endl;
 
-			sA->loadingArea->occupiePlaceInLoadingArea();
+			sA->loadingArea->occupiePlaceInLoadingArea();									//Platz im Beladebereich belegen
 
 			cout << "Startarea: Platz in Beladebereich blockiert" << endl;
 
-			emptyLoadingStation = sA->loadingArea->getEmptyLoadingStation();
+			emptyLoadingStation = sA->loadingArea->getEmptyLoadingStation();				//Leere Beladestation ermitteln
 
 			switch (emptyLoadingStation){
 			case 0:
-				sA->loadingArea->getLoadingStation(0)->occupieStation();
-				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_1);
+				sA->loadingArea->getLoadingStation(0)->occupieStation();					//Ladestation 1 belegen
+				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_1);								//Weiche in Richtung Ladestation 1 stellen
 
 				break;
 			case 1:
-				sA->loadingArea->getLoadingStation(1)->occupieStation();
-				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_2);
+				sA->loadingArea->getLoadingStation(1)->occupieStation();					//Ladestation 2 belegen
+				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_2);								//Weiche in Richtung Ladestation 2 stellen
 				break;
 			}
 
-			sendTo(START_PLACE_STOP_ACTOR, DEACTIVATE);
+			sendTo(START_PLACE_STOP_ACTOR, DEACTIVATE);										//Stop-Aktor des Startbereichs deaktivieren
 
 
-			xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);
+			xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);					//Darauf warten, dass das Fahrzeug den Startbereich verlässt
 			if (recBuffer == START_PLACE_PRESENCE_SENSOR_OUTGOING){
-				sendTo(START_PLACE_STOP_ACTOR, ACTIVATE);
+				sendTo(START_PLACE_STOP_ACTOR, ACTIVATE);									//Stop-Aktor des Startbereics aktivieren
+			}
+			else{
+				sA->errorHandling();														//Anderes Kommando empfangen, als erwartet wurde
 			}
 		}
 		else{
-			cout << "FEHLER: Start Area falsches Kommando" << endl;
+			sA->errorHandling();															//Anderes Kommando empfangen, als erwartet wurde
 		}
 	}
 
 }
 
+/// <summary>
+///	 Setzt die Mailbox des Startbereichs
+/// </summary>
 void StartArea::setMailbox(QueueHandle_t mailbox){
 	this->mailboxStartArea = mailbox;
 }
 
+/// <summary>
+///	 Liefert den xQueueHandle für die Kommunikation mit dem Simulator
+/// </summary>
 void StartArea::setCommunicationSim(xQueueHandle handle){
 	this->xQHandle = handle;
 }
 
+/// <summary>
+///	 Setzt die verwendete Instanz des Ladebereichs
+/// </summary>
 void StartArea::setLoadingArea(LoadingArea *loadingArea){
 	this->loadingArea = loadingArea;
+}
+
+/// <summary>
+///	 Gibt eine Fehlermeldung aus und beendet das Programm
+/// </summary>
+void StartArea::errorHandling(){
+	cout << "FEHLER: Start Area nicht erwartetes Kommando empfangen" << endl;							//Es wurde ein anderes Kommando erwartet. Die Funktion der Task ist erheblich gestört.
+	cout << "Press any key to exit" << endl;
+	cin.get();
+	exit(0);
 }

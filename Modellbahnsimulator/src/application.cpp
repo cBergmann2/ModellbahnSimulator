@@ -48,7 +48,7 @@ extern "C" void taskApplication(void *pvParameters)
 	if (recBuffer != 30){
 		/*ERROR Ereignis-Kennung nach initialisierung falsch*/
 		cout << "FEHLER: Kennung nach Initialisierung falsch" << endl;
-		cout << "Press any key for exit" << endl;
+		cout << "Press any key to exit" << endl;
 		cin.get();
 		exit(0);
 	}
@@ -89,7 +89,7 @@ extern "C" void taskApplication(void *pvParameters)
 		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Bestätigung der Initialisierung holen
 			/*Error*/
 			cout << "FEHLER: xQueueReceive" << endl;
-			cout << "Press any key for exit" << endl;
+			cout << "Press any key to exit" << endl;
 			cin.get();
 			exit(0);
 		}
