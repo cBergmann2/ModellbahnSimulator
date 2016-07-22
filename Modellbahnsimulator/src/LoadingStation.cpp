@@ -11,7 +11,14 @@ using namespace std;
 
 
 
-
+/**************************************************
+Function name: setMailbox(QueueHandle_t )
+returns: void
+argl: Parameter enthält Instanz der Beladestation
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Funktion beschreibt das zyklische Verhalten einer Beladestation
+**************************************************/
 extern "C" void LoadingStation::taskBehavior(void *parms){
 	LoadingStation *ls = (LoadingStation*)parms;
 	int recBuffer;
@@ -48,6 +55,10 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 				}
 				break;
 			case 2:
+				sendTo(LOAD_PLACE_2_LOADING_ACTIVITY, 0);		//Beladevorgang starten
+
+				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Ende des Beladevorgangs warten
+
 				sendTo(LOAD_PLACE_2_STOP_ACTOR, DEACTIVATE);	//StopActor deaktivieren
 
 				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Signal der Anlage warten, dass Fahrzeug die Station verlassen hat
@@ -78,51 +89,146 @@ void LoadingStation::SetID(int newVal){
 	ID = newVal;
 }
 
+
+/**************************************************
+Function name: setMailbox(QueueHandle_t )
+returns: void
+argl: Mailbox zur Kommunikation mit Haupt-Threaed
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Speichert die Mailbox-Variable als Instanzvariable im Objekt
+**************************************************/
 void LoadingStation::setMailbox(QueueHandle_t mailbox){
 	this->mailbox = mailbox;
 }
 
+/**************************************************
+Function name: getMailbox()
+returns: QueueHandle_t
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Liefert die Mailbox dieser Instanz
+**************************************************/
 QueueHandle_t LoadingStation::getMailbox(){
 	return this->mailbox;
 }
 
+
+/**************************************************
+Function name: setPathToLoadingStations(PathSection*)
+returns: void
+argl: Path-Objekt das zu den Beladestationen führt
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Speichert das Path-Objekt das zu den Beladestationen führt
+**************************************************/
 void LoadingStation::setPathToLoadingStations(PathSection *path){
 	this->pathToLoadingStations = path;
 }
 
+
+/**************************************************
+Function name: getPathToLoadingStations()
+returns: PathSection*
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Liefert das Path-Objekt das zu den Beladestationen führt
+**************************************************/
 PathSection* LoadingStation::getPathToLoadingStations(){
 	return this->pathToLoadingStations;
 }
 
+
+/**************************************************
+Function name: setPathToScales(PathSection*)
+returns: void
+argl: Path-Objekt das zu der Waage führt
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Speichert das Path-Objekt das zu der Waage führt
+**************************************************/
 void LoadingStation::setPathToScales(PathSection* path){
 	this->pathToScales = path;
 }
 
+/**************************************************
+Function name: getPathToScales()
+returns: PathSection*
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Liefert das Path-Objekt das zu der Waage führt
+**************************************************/
 PathSection* LoadingStation::getPathToScales(){
 	return this->pathToScales;
 }
 
+
+/**************************************************
+Function name: setDischargingArea(DischargingArea*)
+returns: void
+argl: Objekt, das den Entladebereich repräsentier
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Speichert das Objekt, das den Entladebereich repräsentier
+**************************************************/
 void LoadingStation::setDischargingArea(DischargingArea* dischargingArea){
 	this->dischargingArea = dischargingArea;
 }
 
+/**************************************************
+Function name: getDischargingArea()
+returns: DischargingArea*
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Liefert das Objekt, das den Entladebereich repräsentier
+**************************************************/
 DischargingArea* LoadingStation::getDischargingArea(){
 	return this->dischargingArea;
 }
 
+
+/**************************************************
+Function name: setScales(Scales*)
+returns: void
+argl: Objekt, das die Waage repräsentier
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Speichert das Objekt, das die Waage repräsentier
+**************************************************/
 void LoadingStation::setScales(Scales* scales){
 	this->scales = scales;
 }
 
+/**************************************************
+Function name: getScales()
+returns: Scales*
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Liefert das Objekt, das die Waage repräsentier
+**************************************************/
 Scales* LoadingStation::getScales(){
 	return this->scales;
 }
 
-
+/**************************************************
+Function name: setLoadingArea(LoadingArea*)
+returns: void
+argl: Objekt, das den Beladebereich repräsentier
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Speichert das Objekt, das den Beladebereich repräsentier
+**************************************************/
 void LoadingStation::setLoadingArea(LoadingArea* loadingArea){
 	this->loadingArea = loadingArea;
 }
 
+/**************************************************
+Function name: getLoadingArea()
+returns: LoadingArea*
+Created by: Christoph Bergmann
+Date created: 22.07.2016
+Description: Liefert das Objekt, das den Beladebereich repräsentier
+**************************************************/
 LoadingArea* LoadingStation::getLoadingArea(){
 	return this->loadingArea;
 }
