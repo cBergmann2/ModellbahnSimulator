@@ -24,14 +24,15 @@ public:
 	DischargingStation *dischargingStations;
 	PathSection *pathSection;
 
-	DischargingStation getDischragingStation(int ID);
+	DischargingStation* getDischragingStation(int ID);
 	ThreeWaySwitch* getThreeWaySwitch();
 	TwoWaySwitch* getTwoWaySwitch();
-	void occupiePathSection(int pathSection);
+	void occupiePathSection();
 	static void occupiePlaceInDischargingArea();
 	static void occupiePlaceInDischargingAreaOrWaitingArea();
 	int occupieThreeWaySwitch();
 	void unblockPathSection(int section);
+	int getEmptyDischargingStation();
 
 private:
 	SemaphoreHandle_t semDischargingArea;

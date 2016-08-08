@@ -28,9 +28,9 @@ extern "C" void taskApplication(void *pvParameters)
 	int recBuffer; 
 	void *startAreaInit[2];
 	UBaseType_t taskPrio;
-	QueueHandle_t mailboxStartArea, mailboxLoadingStation1, mailboxLoadingStation2;
+	QueueHandle_t mailboxStartArea, mailboxLoadingStation1, mailboxLoadingStation2, mailboxScales;
 
-	TaskHandle_t tidStartArea, tidLoadingStation1, tidLoadingStation2;
+	TaskHandle_t tidStartArea, tidLoadingStation1, tidLoadingStation2, tidScales;
 
 	StartArea *startArea;
 	LoadingArea *loadingArea;
@@ -78,26 +78,30 @@ extern "C" void taskApplication(void *pvParameters)
 	loadingArea->getLoadingStation(1)->setDischargingArea(dischargingArea);
 	loadingArea->getLoadingStation(0)->setScales(scales);
 	loadingArea->getLoadingStation(1)->setScales(scales);
+	mailboxScales = xQueueCreate(NO_BUFFER, sizeof(int));
+	scales->setMailbox(mailboxScales);
+
 
 	xTaskCreate(StartArea::taskBehavior, "START_AREA", 2048, (void*)startArea, taskPrio - 1, &tidStartArea);
-
+	
 	xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_1", 2048, (void*)loadingArea->getLoadingStation(0), taskPrio - 1, &tidLoadingStation1);
 	xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_2", 2048, (void*)loadingArea->getLoadingStation(1), taskPrio - 1, &tidLoadingStation2);
 
+	xTaskCreate(Scales::taskBehavior, "SCALES", 2048, (void*)scales, taskPrio - 2, &tidScales);
 
 	while (true){
-		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Bestätigung der Initialisierung holen
+		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Daten aus Queue holen
 			/*Error*/
 			cout << "FEHLER: xQueueReceive" << endl;
 			cout << "Press any key to exit" << endl;
 			cin.get();
 			exit(0);
 		}
+		cout << "RECIVE MSG from Simulator" << endl;
 
 		switch (recBuffer){
-		case 0:
+		case START_PLACE_PRESENCE_SENSOR_INCOMING:
 		case 1:
-			/*START_PLACE_PRESENCE_SENSOR_INCOMING*/
 			xQueueSendToBack(mailboxStartArea, &recBuffer, portMAX_DELAY);
 			cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
@@ -113,6 +117,13 @@ extern "C" void taskApplication(void *pvParameters)
 			xQueueSendToBack(mailboxLoadingStation2, &recBuffer, portMAX_DELAY);
 			cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
+		case SCALE_PRESENCE_SENSOR_INCOMING_TO_DISCHARGING_AREA:
+		case SCALE_PRESENCE_SENSOR_OUTGOING_TO_DISCHARGING_AREA:
+		case SCALE_PRESENCE_SENSOR_INCOMING_TO_START_AREA:
+		case SCALE_PRESENCE_SENSOR_OUTGOING_TO_START_AREA:
+		case SCALE_SCALE_ACTIVITY:
+			xQueueSendToBack(mailboxScales, &recBuffer, portMAX_DELAY);
+			cout << "APPLICATION: Send msg to Scales";
 		}
 	}
 

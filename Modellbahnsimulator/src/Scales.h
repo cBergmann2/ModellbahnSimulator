@@ -11,21 +11,22 @@
 
 #include "Station.h"
 #include "PathSection.h"
-
+#include "Defines.h"
+#include "DischargingArea.h"
 
 
 class Scales : public Station
 {
 private:
-//	LoadingArea* loadingArea;
-	QueueHandle_t mailbox;
 
 public:
-	PathSection *pathToStartArea;
+	void static taskBehavior(void*);
+	QueueHandle_t mailbox;
+	DischargingArea *dischargingArea;
 
+	PathSection *pathToStartArea;
 	PathSection* getPathSectionToStartArea();
 	double scalingProcedure();
-	void static taskBehavior(void *parms);
 
 //	void setLoadingArea(LoadingArea*);
 //	LoadingArea* getLoadingArea();

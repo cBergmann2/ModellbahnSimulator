@@ -293,4 +293,6 @@ void startApplTask(void);				// see application.c
 // for freeRTOS-trace, next line must be included
 #include "trace/logTraceMacros.h"
 
+//#define ENABLE_TRACE
+
 #endif /* FREERTOS_CONFIG_H */
