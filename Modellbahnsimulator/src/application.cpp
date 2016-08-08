@@ -88,8 +88,14 @@ extern "C" void taskApplication(void *pvParameters)
 	scales->setMailbox(mailboxScales);
 	scales->setDischargingArea(dischargingArea);
 
-	
+	mailboxDischargingStation1 = xQueueCreate(NO_BUFFER, sizeof(int));
+	dischargingArea->getDischragingStation(0)->setMailbox(mailboxDischargingStation1);
 
+	mailboxDischargingStation2 = xQueueCreate(NO_BUFFER, sizeof(int));
+	dischargingArea->getDischragingStation(1)->setMailbox(mailboxDischargingStation2);
+
+	mailboxDischargingStation3 = xQueueCreate(NO_BUFFER, sizeof(int));
+	dischargingArea->getDischragingStation(2)->setMailbox(mailboxDischargingStation3);
 
 
 
@@ -99,6 +105,10 @@ extern "C" void taskApplication(void *pvParameters)
 	xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_2", 2048, (void*)loadingArea->getLoadingStation(1), taskPrio - 1, &tidLoadingStation2);
 
 	xTaskCreate(Scales::taskBehavior, "SCALES", 2048, (void*)scales, taskPrio - 1, &tidScales);
+
+	xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 2048, (void*)dischargingArea->getDischragingStation(0), taskPrio - 1, &tidDischargingStation1);
+	xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 2048, (void*)dischargingArea->getDischragingStation(1), taskPrio - 1, &tidDischargingStation2);
+	xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 2048, (void*)dischargingArea->getDischragingStation(2), taskPrio - 1, &tidDischargingStation3);
 
 	while (true){
 		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Daten aus Queue holen und an entsprechendes Objekt weiterleiten
@@ -134,7 +144,26 @@ extern "C" void taskApplication(void *pvParameters)
 		case SCALE_PRESENCE_SENSOR_OUTGOING_TO_START_AREA:
 		case SCALE_SCALE_ACTIVITY:
 			xQueueSendToBack(mailboxScales, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to Scales";
+			cout << "APPLICATION: Send msg to Scales" << endl;
+			break;
+		case DISCHARGE_PLACE_1_PRESENCE_SENSOR_INCOMING:
+		case DISCHARGE_PLACE_1_PRESENCE_SENSOR_OUTGOING:
+		case DISCHARGE_PLACE_1_DISCHARGING_ACTIVITY:
+			xQueueSendToBack(mailboxDischargingStation1, &recBuffer, portMAX_DELAY);
+			cout << "APPLICATION: Send msg to DischargingStation1" << endl;
+			break;
+		case DISCHARGE_PLACE_2_PRESENCE_SENSOR_INCOMING:
+		case DISCHARGE_PLACE_2_PRESENCE_SENSOR_OUTGOING:
+		case DISCHARGE_PLACE_2_DISCHARGING_ACTIVITY:
+			xQueueSendToBack(mailboxDischargingStation2, &recBuffer, portMAX_DELAY);
+			cout << "APPLICATION: Send msg to DischargingStation2" << endl;
+			break;
+		case DISCHARGE_PLACE_3_PRESENCE_SENSOR_INCOMING:
+		case DISCHARGE_PLACE_3_PRESENCE_SENSOR_OUTGOING:
+		case DISCHARGE_PLACE_3_DISCHARGING_ACTIVITY:
+			xQueueSendToBack(mailboxDischargingStation3, &recBuffer, portMAX_DELAY);
+			cout << "APPLICATION: Send msg to DischargingStation3" << endl;
+			break;
 		}
 	}
 }

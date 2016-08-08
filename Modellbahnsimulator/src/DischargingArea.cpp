@@ -11,11 +11,11 @@
 DischargingArea::DischargingArea(WaitingArea *waitingArea)
 {
 	this->waitingArea = waitingArea;
-	this->dischargingStations[0] = new DischargingStation(this->waitingArea);
+	this->dischargingStations[0] = new DischargingStation(1, this->waitingArea, this);
 	//this->dischargingStations[0]->setWaitingArea(this->waitingArea);
-	this->dischargingStations[1] = new DischargingStation(this->waitingArea);
+	this->dischargingStations[1] = new DischargingStation(2, this->waitingArea, this);
 	//this->dischargingStations[1]->setWaitingArea(this->waitingArea);
-	this->dischargingStations[2] = new DischargingStation(this->waitingArea);
+	this->dischargingStations[2] = new DischargingStation(3, this->waitingArea, this);
 	//this->dischargingStations[2]->setWaitingArea(this->waitingArea);
 }
 

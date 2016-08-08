@@ -24,7 +24,7 @@ private:
 
 public:
 	DischargingStation();
-	DischargingStation(WaitingArea *waitingArea);
+	DischargingStation(int, WaitingArea *waitingArea, DischargingArea*);
 	virtual ~DischargingStation();
 
 	void static taskBehavior(void *parms);

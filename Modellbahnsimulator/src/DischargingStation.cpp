@@ -13,8 +13,10 @@ DischargingStation::DischargingStation(){
 	
 }
 
-DischargingStation::DischargingStation(WaitingArea *waitingArea){
+DischargingStation::DischargingStation(int id, WaitingArea *waitingArea, DischargingArea *dischargingArea){
+	this->ID = id;
 	this->waitingArea = waitingArea;
+	this->dischargingArea = dischargingArea;
 }
 
 DischargingStation::~DischargingStation(){
@@ -106,7 +108,24 @@ WaitingArea* DischargingStation::getWaitingArea(){
 
 
 void DischargingStation::dischargingProcedure(){
+	int recBuffer;
+	
+	switch (ID){
+	case 1:
+		sendTo(DISCHARGE_PLACE_1_DISCHARGING_ACTIVITY, 0);		//Entladevorgang starten
+		xQueueReceive(mailbox, &recBuffer, portMAX_DELAY);		//Auf Ende des Beladevorgangs warten
+		break;
 
+	case 2:
+		sendTo(DISCHARGE_PLACE_2_DISCHARGING_ACTIVITY, 0);		//Entladevorgang starten
+		xQueueReceive(mailbox, &recBuffer, portMAX_DELAY);		//Auf Ende des Beladevorgangs warten
+		break;
+
+	case 3:
+		sendTo(DISCHARGE_PLACE_3_DISCHARGING_ACTIVITY, 0);		//Entladevorgang starten
+		xQueueReceive(mailbox, &recBuffer, portMAX_DELAY);		//Auf Ende des Beladevorgangs warten
+		break;
+	}
 }
 
 void DischargingStation::setDischargingArea(DischargingArea* dischargingArea){
