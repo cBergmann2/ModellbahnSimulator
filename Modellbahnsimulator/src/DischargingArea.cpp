@@ -8,11 +8,27 @@
 #include "DischargingArea.h"
 
 
-DischargingArea::DischargingArea(){
-
+DischargingArea::DischargingArea(WaitingArea *waitingArea)
+{
+	this->waitingArea = waitingArea;
+	this->dischargingStations[0] = new DischargingStation(this->waitingArea);
+	//this->dischargingStations[0]->setWaitingArea(this->waitingArea);
+	this->dischargingStations[1] = new DischargingStation(this->waitingArea);
+	//this->dischargingStations[1]->setWaitingArea(this->waitingArea);
+	this->dischargingStations[2] = new DischargingStation(this->waitingArea);
+	//this->dischargingStations[2]->setWaitingArea(this->waitingArea);
 }
 
 
+DischargingArea::DischargingArea()
+{
+	//this->dischargingStations[0] = new DischargingStation();
+	//this->dischargingStations[0]->setWaitingArea(this->waitingArea);
+	//this->dischargingStations[1] = new DischargingStation();
+	//this->dischargingStations[1]->setWaitingArea(this->waitingArea);
+	//this->dischargingStations[2] = new DischargingStation();
+	//this->dischargingStations[2]->setWaitingArea(this->waitingArea);
+}
 
 DischargingArea::~DischargingArea(){
 
@@ -21,7 +37,7 @@ DischargingArea::~DischargingArea(){
 
 DischargingStation* DischargingArea::getDischragingStation(int ID){
 
-	return  &dischargingStations[ID];
+	return  dischargingStations[ID];
 }
 
 
@@ -58,16 +74,20 @@ int DischargingArea::occupieThreeWaySwitch(){
 }
 
 
-void DischargingArea::unblockPathSection(int section){
+void DischargingArea::unblockPathSection(){
+
+}
+
+void DischargingArea::unblockThreeWaySwitch(){
 
 }
 
 int DischargingArea::getEmptyDischargingStation(){
-	if (!dischargingStations[0].occupied){
+	if (!dischargingStations[0]->occupied){
 		return 1;
 	}
 	else{
-		if (!dischargingStations[1].occupied){
+		if (!dischargingStations[1]->occupied){
 			return 2;
 		}
 		else{
@@ -75,3 +95,4 @@ int DischargingArea::getEmptyDischargingStation(){
 		}
 	}
 }
+

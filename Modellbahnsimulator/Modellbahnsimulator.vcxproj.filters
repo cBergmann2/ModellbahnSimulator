@@ -135,10 +135,13 @@
     <ClInclude Include="src\DischargingStation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\Scales.h">
+    <ClInclude Include="src\WaitingArea.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\WaitingArea.h">
+    <ClInclude Include="src\Scales_old.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Scales.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -212,10 +215,13 @@
     <ClCompile Include="src\DischargingStation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scales.cpp">
+    <ClCompile Include="src\WaitingArea.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\WaitingArea.cpp">
+    <ClCompile Include="src\scales_old.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Scales.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,37 +1,34 @@
-///////////////////////////////////////////////////////////
-//  Scales.h
-//  Implementation of the Class Scales
-//  Created on:      04-Jul-2016 09:47:38
-//  Original author: Christoph Bergmann
-///////////////////////////////////////////////////////////
+#ifndef SCALES_H
+#define SCALES_H
 
-#if !defined(EA_3C335383_6EA5_4015_9842_385D47134873__INCLUDED_)
-#define EA_3C335383_6EA5_4015_9842_385D47134873__INCLUDED_
 
+#pragma once
 
 #include "Station.h"
 #include "PathSection.h"
 #include "Defines.h"
 #include "DischargingArea.h"
 
-
 class Scales : public Station
 {
-private:
-
 public:
+	Scales();
 	void static taskBehavior(void*);
-	QueueHandle_t mailbox;
+	void setMailbox(QueueHandle_t);
+	void setCommunicationSim(xQueueHandle);
+	void errorHandling();
+
+	void setDischargingArea(DischargingArea*);
+
+	xQueueHandle xQHandle;
+	QueueHandle_t mailboxStartArea;
 	DischargingArea *dischargingArea;
 
 	PathSection *pathToStartArea;
 	PathSection* getPathSectionToStartArea();
-	double scalingProcedure();
 
-//	void setLoadingArea(LoadingArea*);
-//	LoadingArea* getLoadingArea();
-	void setMailbox(QueueHandle_t);
-	QueueHandle_t getMailbox();
-
+	~Scales();
 };
-#endif // !defined(EA_3C335383_6EA5_4015_9842_385D47134873__INCLUDED_)
+
+
+#endif

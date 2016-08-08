@@ -28,14 +28,16 @@ extern "C" void taskApplication(void *pvParameters)
 	int recBuffer; 
 	void *startAreaInit[2];
 	UBaseType_t taskPrio;
-	QueueHandle_t mailboxStartArea, mailboxLoadingStation1, mailboxLoadingStation2, mailboxScales;
+	QueueHandle_t mailboxStartArea, mailboxLoadingStation1, mailboxLoadingStation2, mailboxScales, mailboxDischargingStation1, mailboxDischargingStation2, mailboxDischargingStation3;
 
-	TaskHandle_t tidStartArea, tidLoadingStation1, tidLoadingStation2, tidScales;
+	TaskHandle_t tidStartArea, tidLoadingStation1, tidLoadingStation2, tidScales, tidDischargingStation1, tidDischargingStation2, tidDischargingStation3;
 
 	StartArea *startArea;
 	LoadingArea *loadingArea;
 	Scales *scales;
 	DischargingArea *dischargingArea;
+	DischargingStation *dischargingStation1, *dischargingStation2, *dischargingStation3;
+	WaitingArea *waitingArea;
 
 	xQueueHandle xQHandle = initSystem();	// Init System
 	
@@ -62,24 +64,33 @@ extern "C" void taskApplication(void *pvParameters)
 	startArea = new StartArea();
 	loadingArea = new LoadingArea();
 	scales = new Scales();
-	dischargingArea = new DischargingArea();
+	waitingArea = new WaitingArea();
+	dischargingArea = new DischargingArea(waitingArea);
 
 	startArea->setLoadingArea(loadingArea);
 
 
 	mailboxStartArea = xQueueCreate(NO_BUFFER, sizeof(int));
-	mailboxLoadingStation1 = xQueueCreate(NO_BUFFER, sizeof(int));
-	mailboxLoadingStation2 = xQueueCreate(NO_BUFFER, sizeof(int));
 	startArea->setCommunicationSim(xQHandle);
 	startArea->setMailbox(mailboxStartArea);
+
+	mailboxLoadingStation1 = xQueueCreate(NO_BUFFER, sizeof(int));
 	loadingArea->getLoadingStation(0)->setMailbox(mailboxLoadingStation1);
-	loadingArea->getLoadingStation(1)->setMailbox(mailboxLoadingStation2);
 	loadingArea->getLoadingStation(0)->setDischargingArea(dischargingArea);
-	loadingArea->getLoadingStation(1)->setDischargingArea(dischargingArea);
 	loadingArea->getLoadingStation(0)->setScales(scales);
+
+	mailboxLoadingStation2 = xQueueCreate(NO_BUFFER, sizeof(int));
+	loadingArea->getLoadingStation(1)->setMailbox(mailboxLoadingStation2);
+	loadingArea->getLoadingStation(1)->setDischargingArea(dischargingArea);
 	loadingArea->getLoadingStation(1)->setScales(scales);
+
 	mailboxScales = xQueueCreate(NO_BUFFER, sizeof(int));
 	scales->setMailbox(mailboxScales);
+	scales->setDischargingArea(dischargingArea);
+
+	
+
+
 
 
 	xTaskCreate(StartArea::taskBehavior, "START_AREA", 2048, (void*)startArea, taskPrio - 1, &tidStartArea);
@@ -87,10 +98,10 @@ extern "C" void taskApplication(void *pvParameters)
 	xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_1", 2048, (void*)loadingArea->getLoadingStation(0), taskPrio - 1, &tidLoadingStation1);
 	xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_2", 2048, (void*)loadingArea->getLoadingStation(1), taskPrio - 1, &tidLoadingStation2);
 
-	xTaskCreate(Scales::taskBehavior, "SCALES", 2048, (void*)scales, taskPrio - 2, &tidScales);
+	xTaskCreate(Scales::taskBehavior, "SCALES", 2048, (void*)scales, taskPrio - 1, &tidScales);
 
 	while (true){
-		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Daten aus Queue holen
+		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Daten aus Queue holen und an entsprechendes Objekt weiterleiten
 			/*Error*/
 			cout << "FEHLER: xQueueReceive" << endl;
 			cout << "Press any key to exit" << endl;
@@ -126,7 +137,4 @@ extern "C" void taskApplication(void *pvParameters)
 			cout << "APPLICATION: Send msg to Scales";
 		}
 	}
-
-
-
 }

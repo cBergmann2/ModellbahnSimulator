@@ -20,6 +20,7 @@ Date created: 22.07.2016
 Description: Funktion beschreibt das zyklische Verhalten einer Beladestation
 **************************************************/
 extern "C" void LoadingStation::taskBehavior(void *parms){
+	
 	LoadingStation *ls = (LoadingStation*)parms;
 	int recBuffer;
 
@@ -73,6 +74,7 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 			ls->loadingArea->unblockPlaceInLoadingArea();	//Platz im Beladebereich freigeben
 		}
 	}
+	
 }
 
 void LoadingStation::loadingProcedure(){
