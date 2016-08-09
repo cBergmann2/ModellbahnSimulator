@@ -27,10 +27,11 @@ extern "C" void taskApplication(void *pvParameters)
 	signed portBASE_TYPE rV;	//Return Value
 	int recBuffer; 
 	void *startAreaInit[2];
+	BaseType_t retValue;
 	UBaseType_t taskPrio;
-	QueueHandle_t mailboxStartArea, mailboxLoadingStation1, mailboxLoadingStation2, mailboxScales, mailboxDischargingStation1, mailboxDischargingStation2, mailboxDischargingStation3;
+	QueueHandle_t mailboxStartArea, mailboxLoadingStation1, mailboxLoadingStation2, mailboxScales, mailboxDischargingStation1, mailboxDischargingStation2, mailboxDischargingStation3, mailboxWaitingArea;
 
-	TaskHandle_t tidStartArea, tidLoadingStation1, tidLoadingStation2, tidScales, tidDischargingStation1, tidDischargingStation2, tidDischargingStation3;
+	TaskHandle_t tidStartArea, tidLoadingStation1, tidLoadingStation2, tidScales, tidDischargingStation1, tidDischargingStation2, tidDischargingStation3, tidWaitingArea;
 
 	StartArea *startArea;
 	LoadingArea *loadingArea;
@@ -97,18 +98,91 @@ extern "C" void taskApplication(void *pvParameters)
 	mailboxDischargingStation3 = xQueueCreate(NO_BUFFER, sizeof(int));
 	dischargingArea->getDischragingStation(2)->setMailbox(mailboxDischargingStation3);
 
+	mailboxWaitingArea = xQueueCreate(NO_BUFFER, sizeof(int));
+	waitingArea->setMailbox(mailboxWaitingArea);
+	waitingArea->setDischargingArea(dischargingArea);
+	waitingArea->setScales(scales);
 
-
-	xTaskCreate(StartArea::taskBehavior, "START_AREA", 2048, (void*)startArea, taskPrio - 1, &tidStartArea);
+	if ((retValue = xTaskCreate(StartArea::taskBehavior, "START_AREA", 1024, (void*)startArea, taskPrio - 1, &tidStartArea)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task StartArea gestartet" << endl;
+	}
 	
-	xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_1", 2048, (void*)loadingArea->getLoadingStation(0), taskPrio - 1, &tidLoadingStation1);
-	xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_2", 2048, (void*)loadingArea->getLoadingStation(1), taskPrio - 1, &tidLoadingStation2);
+	if ((retValue = xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_1", 1024, (void*)loadingArea->getLoadingStation(0), taskPrio - 1, &tidLoadingStation1)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task LoadingStation1 gestartet" << endl;
+	}
+	
+	if ((retValue = xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_2", 1024, (void*)loadingArea->getLoadingStation(1), taskPrio - 1, &tidLoadingStation2)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task LoadingStation2 gestartet" << endl;
+	}
 
-	xTaskCreate(Scales::taskBehavior, "SCALES", 2048, (void*)scales, taskPrio - 1, &tidScales);
+	if ((retValue = xTaskCreate(Scales::taskBehavior, "SCALES", 1024, (void*)scales, taskPrio - 1, &tidScales)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task Scales gestartet" << endl;
+	}
 
-	xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 2048, (void*)dischargingArea->getDischragingStation(0), taskPrio - 1, &tidDischargingStation1);
-	xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 2048, (void*)dischargingArea->getDischragingStation(1), taskPrio - 1, &tidDischargingStation2);
-	xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 2048, (void*)dischargingArea->getDischragingStation(2), taskPrio - 1, &tidDischargingStation3);
+	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 1024, (void*)dischargingArea->getDischragingStation(0), taskPrio - 1, &tidDischargingStation1)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task DischargingStation1 gestartet" << endl;
+	}
+
+	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_2", 1024, (void*)dischargingArea->getDischragingStation(1), taskPrio - 1, &tidDischargingStation2)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task DischargingStation2 gestartet" << endl;
+	}
+
+	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_3", 1024, (void*)dischargingArea->getDischragingStation(2), taskPrio - 1, &tidDischargingStation3)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task DischargingStation3 gestartet" << endl;
+	}
+	
+	if ((retValue = xTaskCreate(WaitingArea::taskBehavior, "WatingArea", 1024, (void*)waitingArea, taskPrio - 1, &tidWaitingArea)) != pdPASS){
+		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
+		cout << "Press any key to exit" << endl;
+		cin.get();
+		exit(0);
+	}
+	else{
+		cout << "Task WaitingArea gestartet" << endl;
+	}
+	
 
 	while (true){
 		if ((rV = xQueueReceive(xQHandle, &recBuffer, portMAX_DELAY)) == 0){	//Daten aus Queue holen und an entsprechendes Objekt weiterleiten
@@ -164,6 +238,10 @@ extern "C" void taskApplication(void *pvParameters)
 			xQueueSendToBack(mailboxDischargingStation3, &recBuffer, portMAX_DELAY);
 			cout << "APPLICATION: Send msg to DischargingStation3" << endl;
 			break;
+		case WAITING_PLACE_PRESENCE_SENSOR_INCOMING:
+		case WAITING_PLACE_PRESENCE_SENSOR_OUTGOING:
+			xQueueSendToBack(mailboxWaitingArea, &recBuffer, portMAX_DELAY);
+			cout << "APPLICATION: Send msg to WaitingArea" << endl;
 		}
 	}
 }

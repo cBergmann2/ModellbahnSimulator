@@ -117,9 +117,9 @@ occurs.
 #define configCPU_CLOCK_HZ				( ( unsigned long ) 50000000UL	) // DO NOT TOUCH!
 #define configTICK_RATE_HZ				(( portTickType )1000) // must be lower than 5000 /* In this non-real time simulated environment the tick frequency has to be at least a multiple of the Win32 tick frequency, and therefore very slow. */
 #define configMAX_PRIORITIES			( 7 )
-#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 60 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the Win32 thread. */
-#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 64U * 1024U ) )
-#define configMAX_TASK_NAME_LEN			( 7 )	// higher value increase RAM usage, reduce trace events til buffer overflow
+#define configMINIMAL_STACK_SIZE		( ( unsigned short ) 90 ) /* In this simulated case, the stack only has to hold one small structure as the real stack is part of the Win32 thread. */
+#define configTOTAL_HEAP_SIZE			( ( size_t ) ( 60U * 1024U ) )
+#define configMAX_TASK_NAME_LEN			( 20 )	// higher value increase RAM usage, reduce trace events til buffer overflow
 #define configQUEUE_REGISTRY_SIZE		0
 #define configIDLE_SHOULD_YIELD			1
 #define configMAXTasks					10

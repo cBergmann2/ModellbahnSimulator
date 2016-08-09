@@ -9,6 +9,8 @@
 #include "Defines.h"
 #include "DischargingArea.h"
 
+class DischargingArea;
+class WaitingArea;
 class Scales : public Station
 {
 public:
@@ -25,7 +27,7 @@ public:
 	DischargingArea *dischargingArea;
 
 	PathSection *pathToStartArea;
-	PathSection* getPathSectionToStartArea();
+	PathSection *getPathSectionToStartArea();
 
 	~Scales();
 };

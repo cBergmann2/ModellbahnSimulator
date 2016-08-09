@@ -15,6 +15,7 @@
 #include "WaitingArea.h"
 #include "Defines.h"
 
+class WaitingArea;
 class DischargingArea;
 class  DischargingStation : public Station
 {
