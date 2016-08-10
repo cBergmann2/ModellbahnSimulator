@@ -38,7 +38,8 @@ extern "C" void WaitingArea::taskBehavior(void *parms){
 			//cout << "Waitingarea: Platz in Waage blockiert" << endl;
 
 			//sendTo(SCALES_PLACE_STOP_ACTOR, DEACTIVATE);
-
+			wA->getScales()->occupieStation();				//Waage reservieren
+			cout << "Waitingarea: Platz in Waage blockiert" << endl;
 
 		}
 
@@ -46,6 +47,7 @@ extern "C" void WaitingArea::taskBehavior(void *parms){
 		{
 			sendTo(WAITING_PLACE_STOP_ACTOR, ACTIVATE);
 		}
+		sendTo(WAITING_PLACE_STOP_ACTOR, DEACTIVATE);
 	}
 	
 }
