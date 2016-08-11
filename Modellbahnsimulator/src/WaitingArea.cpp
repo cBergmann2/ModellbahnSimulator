@@ -31,6 +31,8 @@ extern "C" void WaitingArea::taskBehavior(void *parms){
 			cout << "Waitingarea: Fahrzeug eingetroffen" << endl;
 
 			wA->getDischargingArea()->unblockPathSection();
+			cout << "WaitingArea: Streckenabschnitt freigegeben" << endl;
+			wA->getDischargingArea()->unblockPlaceInDischargingArea();
 
 			// wA->pSScales->occupiePath();
 			//cout << "Waitingarea: Streckenabschnitt zur Waage blockiert" << endl;
@@ -41,13 +43,16 @@ extern "C" void WaitingArea::taskBehavior(void *parms){
 			wA->getScales()->occupieStation();				//Waage reservieren
 			cout << "Waitingarea: Platz in Waage blockiert" << endl;
 
-		}
+			sendTo(WAITING_PLACE_STOP_ACTOR, DEACTIVATE);
+			xQueueReceive(wA->getMailbox(), &recBuffer, portMAX_DELAY);
+			if (recBuffer == WAITING_PLACE_PRESENCE_SENSOR_OUTGOING)
+			{
+				sendTo(WAITING_PLACE_STOP_ACTOR, ACTIVATE);
+				wA->unblockStation();
+				cout << "WaitingArea: Wartebreich freigegeben" << endl;
+			}
+		}	
 
-		if (recBuffer == WAITING_PLACE_PRESENCE_SENSOR_OUTGOING)
-		{
-			sendTo(WAITING_PLACE_STOP_ACTOR, ACTIVATE);
-		}
-		sendTo(WAITING_PLACE_STOP_ACTOR, DEACTIVATE);
 	}
 	
 }

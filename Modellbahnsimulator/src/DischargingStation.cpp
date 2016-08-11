@@ -34,26 +34,33 @@ extern "C" void DischargingStation::taskBehavior(void *parms){
 	while (true){
 		
 		xQueueReceive(ds->getMailbox(), &recBuffer, portMAX_DELAY);	//Wait for vehicle
+		cout << "DischargingStation " << ds->ID << ": Wagen angekommen" << endl;
 
 		switch (ds->ID){											//Blockierte Streckensegmente Freigeben
 		case 1:
 		case 2:
 			ds->dischargingArea->unblockThreeWaySwitch();
+			cout << "DischargingStation " << ds->ID << ": 3-Wege-Weiche freigegeben" << endl;
 			break;
 		case 3:
 			ds->dischargingArea->unblockThreeWaySwitch();
+			cout << "DischargingStation " << ds->ID << ": 3-Wege-Weiche freigegeben" << endl;
 			ds->dischargingArea->unblockPathSection();
+			cout << "DischargingStation " << ds->ID << ": Streckenabschnitt freigegeben" << endl;
 			break;
 		}
 
 		ds->dischargingProcedure();
 
 		ds->getWaitingArea()->occupieStation();
+		cout << "DischargingStation " << ds->ID << ": Wartebreich blockiert" << endl;
 
 		switch (ds->ID){									//Benötigte Streckensegmenete blockieren
 		case 1:
 		case 2:
 			ds->dischargingArea->occupiePathSection();
+			cout << "DischargingStation " << ds->ID << ": Streckenabschnitt blockiert" << endl;
+			sendTo(SWITCH_DISCHARGINGSTATION_3, 2);
 			break;
 		case 3:												//Nothing to do
 			break;

@@ -20,7 +20,10 @@ class DischargingArea
 private:
 	SemaphoreHandle_t semDischargingArea;
 	SemaphoreHandle_t semDischargingAreaAndWaitingStation;
+	SemaphoreHandle_t semPathSection;
 	WaitingArea *waitingArea;
+	PathSection *pathSection;
+	PathSection *pSThreeWaySwitch;
 
 public:
 	DischargingArea(WaitingArea *waitingArea);
@@ -29,16 +32,15 @@ public:
 	TwoWaySwitch *twoWaySwitch;
 	ThreeWaySwitch *threeWaySwitch;
 	DischargingStation* dischargingStations[3];
-	PathSection *pathSection;
 
 	DischargingStation* getDischragingStation(int ID);
 	ThreeWaySwitch* getThreeWaySwitch();
 	TwoWaySwitch* getTwoWaySwitch();
-	static void occupiePlaceInDischargingArea();
+	void occupiePlaceInDischargingArea();
 	void unblockPlaceInDischargingArea();
-	static void occupiePlaceInDischargingAreaOrWaitingArea();
+	void occupiePlaceInDischargingAreaOrWaitingArea();
 	void unblockPlaceInDischargingAreaOrWaitingArea();
-	int occupieThreeWaySwitch();
+	void occupieThreeWaySwitch();
 	void unblockThreeWaySwitch();
 	void occupiePathSection();
 	void unblockPathSection();

@@ -47,7 +47,7 @@ extern "C" void Scales::taskBehavior(void *parms)
 			}
 
 			sendTo(SCALE_PLACE_STOP_ACTOR, DEACTIVATE);										//Stop-Aktor des Startbereichs deaktivieren
-			xQueueReceive(scales->mailboxStartArea, &recBuffer, portMAX_DELAY);					//Darauf warten, dass das Fahrzeug die Waage verlässt
+			xQueueReceive(scales->mailboxStartArea, &recBuffer, portMAX_DELAY);				//Darauf warten, dass das Fahrzeug die Waage verlässt
 			if (recBuffer == SCALE_PRESENCE_SENSOR_OUTGOING_TO_DISCHARGING_AREA){
 				sendTo(SCALE_PLACE_STOP_ACTOR, ACTIVATE);									//Stop-Aktor der Waage aktivieren
 			}
@@ -55,6 +55,19 @@ extern "C" void Scales::taskBehavior(void *parms)
 
 			break;
 		case SCALE_PRESENCE_SENSOR_INCOMING_TO_START_AREA:
+
+			scales->dischargingArea->unblockPlaceInDischargingAreaOrWaitingArea();
+
+			sendTo(SCALE_SCALE_ACTIVITY, 0);									//Wiegevorgang starten
+			xQueueReceive(scales->mailboxStartArea, &recBuffer, portMAX_DELAY);	//Auf Ende des Wiegevorgangs warten
+
+			sendTo(SCALE_PLACE_STOP_ACTOR, DEACTIVATE);											//Stop-Aktor des Startbereichs deaktivieren
+			xQueueReceive(scales->mailboxStartArea, &recBuffer, portMAX_DELAY);					//Darauf warten, dass das Fahrzeug die Waage verlässt
+			if (recBuffer == SCALE_PRESENCE_SENSOR_OUTGOING_TO_START_AREA){
+				sendTo(SCALE_PLACE_STOP_ACTOR, ACTIVATE);										//Stop-Aktor der Waage aktivieren
+			}
+			scales->unblockStation();
+
 			break;
 		}
 	}
