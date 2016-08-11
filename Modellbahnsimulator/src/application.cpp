@@ -103,7 +103,7 @@ extern "C" void taskApplication(void *pvParameters)
 	waitingArea->setDischargingArea(dischargingArea);
 	waitingArea->setScales(scales);
 
-	if ((retValue = xTaskCreate(StartArea::taskBehavior, "START_AREA", 1024, (void*)startArea, taskPrio - 1, &tidStartArea)) != pdPASS){
+	if ((retValue = xTaskCreate(StartArea::taskBehavior, "START_AREA", 1024, (void*)startArea, taskPrio - 2, &tidStartArea)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -113,7 +113,7 @@ extern "C" void taskApplication(void *pvParameters)
 		cout << "Task StartArea gestartet" << endl;
 	}
 	
-	if ((retValue = xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_1", 1024, (void*)loadingArea->getLoadingStation(0), taskPrio - 1, &tidLoadingStation1)) != pdPASS){
+	if ((retValue = xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_1", 1024, (void*)loadingArea->getLoadingStation(0), taskPrio - 2, &tidLoadingStation1)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -123,7 +123,7 @@ extern "C" void taskApplication(void *pvParameters)
 		cout << "Task LoadingStation1 gestartet" << endl;
 	}
 	
-	if ((retValue = xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_2", 1024, (void*)loadingArea->getLoadingStation(1), taskPrio - 1, &tidLoadingStation2)) != pdPASS){
+	if ((retValue = xTaskCreate(LoadingStation::taskBehavior, "LOADING_STATION_2", 1024, (void*)loadingArea->getLoadingStation(1), taskPrio - 2, &tidLoadingStation2)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -133,7 +133,7 @@ extern "C" void taskApplication(void *pvParameters)
 		cout << "Task LoadingStation2 gestartet" << endl;
 	}
 
-	if ((retValue = xTaskCreate(Scales::taskBehavior, "SCALES", 1024, (void*)scales, taskPrio - 1, &tidScales)) != pdPASS){
+	if ((retValue = xTaskCreate(Scales::taskBehavior, "SCALES", 1024, (void*)scales, taskPrio - 2, &tidScales)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -143,7 +143,7 @@ extern "C" void taskApplication(void *pvParameters)
 		cout << "Task Scales gestartet" << endl;
 	}
 
-	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 1024, (void*)dischargingArea->getDischragingStation(0), taskPrio - 1, &tidDischargingStation1)) != pdPASS){
+	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_1", 1024, (void*)dischargingArea->getDischragingStation(0), taskPrio - 2, &tidDischargingStation1)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -153,7 +153,7 @@ extern "C" void taskApplication(void *pvParameters)
 		cout << "Task DischargingStation1 gestartet" << endl;
 	}
 
-	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_2", 1024, (void*)dischargingArea->getDischragingStation(1), taskPrio - 1, &tidDischargingStation2)) != pdPASS){
+	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_2", 1024, (void*)dischargingArea->getDischragingStation(1), taskPrio - 2, &tidDischargingStation2)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -163,7 +163,7 @@ extern "C" void taskApplication(void *pvParameters)
 		cout << "Task DischargingStation2 gestartet" << endl;
 	}
 
-	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_3", 1024, (void*)dischargingArea->getDischragingStation(2), taskPrio - 1, &tidDischargingStation3)) != pdPASS){
+	if ((retValue = xTaskCreate(DischargingStation::taskBehavior, "DISCHARGING_STATION_3", 1024, (void*)dischargingArea->getDischragingStation(2), taskPrio - 2, &tidDischargingStation3)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -173,7 +173,7 @@ extern "C" void taskApplication(void *pvParameters)
 		cout << "Task DischargingStation3 gestartet" << endl;
 	}
 	
-	if ((retValue = xTaskCreate(WaitingArea::taskBehavior, "WatingArea", 1024, (void*)waitingArea, taskPrio - 1, &tidWaitingArea)) != pdPASS){
+	if ((retValue = xTaskCreate(WaitingArea::taskBehavior, "WatingArea", 1024, (void*)waitingArea, taskPrio - 2, &tidWaitingArea)) != pdPASS){
 		cout << "ERROR: xTaskCreate fails: " << retValue << endl;
 		cout << "Press any key to exit" << endl;
 		cin.get();
@@ -192,25 +192,30 @@ extern "C" void taskApplication(void *pvParameters)
 			cin.get();
 			exit(0);
 		}
-		cout << "RECIVE MSG from Simulator" << endl;
+		//cout << "RECIVE MSG from Simulator" << endl;
 
 		switch (recBuffer){
 		case START_PLACE_PRESENCE_SENSOR_INCOMING:
-		case 1:
+			cout << "APPLICATION: START_PLACE_PRESENCE_SENSOR_INCOMING" << endl;
+		case START_PLACE_PRESENCE_SENSOR_OUTGOING:
+			cout << "APPLICATION: START_PLACE_PRESENCE_SENSOR_OUTGOING" << endl;
 			xQueueSendToBack(mailboxStartArea, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
 		case LOAD_PLACE_1_PRESENCE_SENSOR_INCOMING:
+			cout << "APPLICATION: LOAD_PLACE_1_PRESENCE_SENSOR_INCOMING" << endl;
 		case LOAD_PLACE_1_PRESENCE_SENSOR_OUTGOING:
+			cout << "APPLICATION: LOAD_PLACE_1_PRESENCE_SENSOR_INCOMING" << endl;
 		case LOAD_PLACE_1_LOADING_ACTIVITY:
+			cout << "APPLICATION: LOAD_PLACE_1_LOADING_ACTIVITY" << endl;
 			xQueueSendToBack(mailboxLoadingStation1, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
 		case LOAD_PLACE_2_PRESENCE_SENSOR_INCOMING:
+			cout << "APPLICATION: LOAD_PLACE_2_PRESENCE_SENSOR_INCOMING" << endl;
 		case LOAD_PLACE_2_PRESENCE_SENSOR_OUTGOING:
+			cout << "APPLICATION: LOAD_PLACE_2_PRESENCE_SENSOR_OUTGOING" << endl;
 		case LOAD_PLACE_2_LOADING_ACTIVITY:
+			cout << "APPLICATION: LOAD_PLACE_2_LOADING_ACTIVITY" << endl;
 			xQueueSendToBack(mailboxLoadingStation2, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
 		case SCALE_PRESENCE_SENSOR_INCOMING_TO_DISCHARGING_AREA:
 		case SCALE_PRESENCE_SENSOR_OUTGOING_TO_DISCHARGING_AREA:
@@ -245,3 +250,4 @@ extern "C" void taskApplication(void *pvParameters)
 		}
 	}
 }
+

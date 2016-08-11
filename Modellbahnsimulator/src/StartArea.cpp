@@ -62,12 +62,14 @@ extern "C" void StartArea::taskBehavior(void *parms){
 				break;
 			}
 
+			vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) + 1);							//Betreten eines zeitkritischen Bereichs -> Priorität der Task erhöhen
 			sendTo(START_PLACE_STOP_ACTOR, DEACTIVATE);										//Stop-Aktor des Startbereichs deaktivieren
-
 
 			xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);					//Darauf warten, dass das Fahrzeug den Startbereich verlässt
 			if (recBuffer == START_PLACE_PRESENCE_SENSOR_OUTGOING){
 				sendTo(START_PLACE_STOP_ACTOR, ACTIVATE);									//Stop-Aktor des Startbereics aktivieren
+				
+				vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) - 1);						//Kritischer Bereich verlassen -> Priorität der Task senken
 			}
 			else{
 				sA->errorHandling();														//Anderes Kommando empfangen, als erwartet wurde

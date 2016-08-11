@@ -42,30 +42,34 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 			
 			switch (ls->GetID()){
 			case 1:
-				sendTo(LOAD_PLACE_1_LOADING_ACTIVITY, 0);		//Beladevorgang starten
+				sendTo(LOAD_PLACE_1_LOADING_ACTIVITY, 0);							//Beladevorgang starten
 
-				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Ende des Beladevorgangs warten
+				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);				//Auf Ende des Beladevorgangs warten
 
-				sendTo(LOAD_PLACE_1_STOP_ACTOR, DEACTIVATE);	//StopActor deaktivieren
+				vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) + 1);				//Betreten eines zeitkritischen Bereichs -> Priorität der Task erhöhen
+				sendTo(LOAD_PLACE_1_STOP_ACTOR, DEACTIVATE);						//StopActor deaktivieren
 
-				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Signal der Anlage warten, dass Fahrzeug die Station verlassen hat
+				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);				//Auf Signal der Anlage warten, dass Fahrzeug die Station verlassen hat
 				if (recBuffer == LOAD_PLACE_1_PRESENCE_SENSOR_OUTGOING){
-					sendTo(LOAD_PLACE_1_STOP_ACTOR, ACTIVATE); //StopActor aktivieren
-					ls->unblockStation();	//Station freigeben
+					sendTo(LOAD_PLACE_1_STOP_ACTOR, ACTIVATE);						//StopActor aktivieren
+					vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) - 1);			//Kritischer Bereich verlassen -> Priorität der Task senken
+					ls->unblockStation();											//Station freigeben
 					cout << "LoadingStation_1: unblock station" << endl;
 				}
 				break;
 			case 2:
-				sendTo(LOAD_PLACE_2_LOADING_ACTIVITY, 0);		//Beladevorgang starten
+				sendTo(LOAD_PLACE_2_LOADING_ACTIVITY, 0);							//Beladevorgang starten
 
-				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Ende des Beladevorgangs warten
+				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);				//Auf Ende des Beladevorgangs warten
 
-				sendTo(LOAD_PLACE_2_STOP_ACTOR, DEACTIVATE);	//StopActor deaktivieren
+				vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) + 1);				//Betreten eines zeitkritischen Bereichs -> Priorität der Task erhöhen
+				sendTo(LOAD_PLACE_2_STOP_ACTOR, DEACTIVATE);						//StopActor deaktivieren
 
-				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Signal der Anlage warten, dass Fahrzeug die Station verlassen hat
+				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);				//Auf Signal der Anlage warten, dass Fahrzeug die Station verlassen hat
 				if (recBuffer == LOAD_PLACE_2_PRESENCE_SENSOR_OUTGOING){
-					sendTo(LOAD_PLACE_2_STOP_ACTOR, ACTIVATE); //StopActor aktivieren
-					ls->unblockStation();	//Station freigeben
+					sendTo(LOAD_PLACE_2_STOP_ACTOR, ACTIVATE);						//StopActor aktivieren
+					vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) - 1);			//Kritischer Bereich verlassen -> Priorität der Task senken
+					ls->unblockStation();											//Station freigeben
 					cout << "LoadingStation_2: unblock station" << endl;
 				}
 				break;
