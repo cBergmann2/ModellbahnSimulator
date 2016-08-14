@@ -63,6 +63,8 @@ extern "C" void DischargingStation::taskBehavior(void *parms){
 			sendTo(SWITCH_DISCHARGINGSTATION_3, 2);
 			break;
 		case 3:												//Nothing to do
+			ds->dischargingArea->occupiePathSection();
+			cout << "DischargingStation " << ds->ID << ": Streckenabschnitt blockiert" << endl;	//Muss akutell auch hier gemacht werden, da ansonsten ein Fehler bei SemGive im Wartebreich entsteht.
 			break;
 		}
 

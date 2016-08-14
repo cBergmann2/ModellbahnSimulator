@@ -192,25 +192,25 @@ extern "C" void taskApplication(void *pvParameters)
 			cin.get();
 			exit(0);
 		}
-		cout << "RECIVE MSG from Simulator" << endl;
+		//cout << "RECIVE MSG from Simulator" << endl;
 
 		switch (recBuffer){
 		case START_PLACE_PRESENCE_SENSOR_INCOMING:
 		case 1:
 			xQueueSendToBack(mailboxStartArea, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to StartArea" << endl;
+			//cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
 		case LOAD_PLACE_1_PRESENCE_SENSOR_INCOMING:
 		case LOAD_PLACE_1_PRESENCE_SENSOR_OUTGOING:
 		case LOAD_PLACE_1_LOADING_ACTIVITY:
 			xQueueSendToBack(mailboxLoadingStation1, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to StartArea" << endl;
+			//cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
 		case LOAD_PLACE_2_PRESENCE_SENSOR_INCOMING:
 		case LOAD_PLACE_2_PRESENCE_SENSOR_OUTGOING:
 		case LOAD_PLACE_2_LOADING_ACTIVITY:
 			xQueueSendToBack(mailboxLoadingStation2, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to StartArea" << endl;
+			//cout << "APPLICATION: Send msg to StartArea" << endl;
 			break;
 		case SCALE_PRESENCE_SENSOR_INCOMING_TO_DISCHARGING_AREA:
 		case SCALE_PRESENCE_SENSOR_OUTGOING_TO_DISCHARGING_AREA:
@@ -218,30 +218,30 @@ extern "C" void taskApplication(void *pvParameters)
 		case SCALE_PRESENCE_SENSOR_OUTGOING_TO_START_AREA:
 		case SCALE_SCALE_ACTIVITY:
 			xQueueSendToBack(mailboxScales, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to Scales" << endl;
+			//cout << "APPLICATION: Send msg to Scales" << endl;
 			break;
 		case DISCHARGE_PLACE_1_PRESENCE_SENSOR_INCOMING:
 		case DISCHARGE_PLACE_1_PRESENCE_SENSOR_OUTGOING:
 		case DISCHARGE_PLACE_1_DISCHARGING_ACTIVITY:
 			xQueueSendToBack(mailboxDischargingStation1, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to DischargingStation1" << endl;
+			//cout << "APPLICATION: Send msg to DischargingStation1" << endl;
 			break;
 		case DISCHARGE_PLACE_2_PRESENCE_SENSOR_INCOMING:
 		case DISCHARGE_PLACE_2_PRESENCE_SENSOR_OUTGOING:
 		case DISCHARGE_PLACE_2_DISCHARGING_ACTIVITY:
 			xQueueSendToBack(mailboxDischargingStation2, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to DischargingStation2" << endl;
+			//cout << "APPLICATION: Send msg to DischargingStation2" << endl;
 			break;
 		case DISCHARGE_PLACE_3_PRESENCE_SENSOR_INCOMING:
 		case DISCHARGE_PLACE_3_PRESENCE_SENSOR_OUTGOING:
 		case DISCHARGE_PLACE_3_DISCHARGING_ACTIVITY:
 			xQueueSendToBack(mailboxDischargingStation3, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to DischargingStation3" << endl;
+			//cout << "APPLICATION: Send msg to DischargingStation3" << endl;
 			break;
 		case WAITING_PLACE_PRESENCE_SENSOR_INCOMING:
 		case WAITING_PLACE_PRESENCE_SENSOR_OUTGOING:
 			xQueueSendToBack(mailboxWaitingArea, &recBuffer, portMAX_DELAY);
-			cout << "APPLICATION: Send msg to WaitingArea" << endl;
+			//cout << "APPLICATION: Send msg to WaitingArea" << endl;
 		}
 	}
 }

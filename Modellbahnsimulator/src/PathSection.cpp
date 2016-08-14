@@ -11,6 +11,7 @@ using namespace std;
 
 PathSection::PathSection(){
 	semHandle = xSemaphoreCreateBinary();
+
 	xSemaphoreGive(semHandle);
 }
 
@@ -25,7 +26,7 @@ void PathSection::occupiePath(){
 
 	if (xSemaphoreTake(semHandle, portMAX_DELAY) == 0){
 		/*FEHLER*/
-		cout << "Fehler bei SemTake" << endl;
+		cout << "!!!Fehler bei SemTake" << endl;
 	}
 }
 
@@ -34,6 +35,6 @@ void PathSection::releasePath(){
 	
 	if (xSemaphoreGive(semHandle) == 0){
 		/*FEHLER*/
-		cout << "Fehler bei SemGive" << endl;
+		cout << "!!!Fehler bei SemGive" << endl;
 	}
 }

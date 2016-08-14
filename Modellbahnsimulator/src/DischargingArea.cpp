@@ -21,15 +21,6 @@ DischargingArea::DischargingArea(WaitingArea *waitingArea)
 }
 
 
-DischargingArea::DischargingArea()
-{
-	//this->dischargingStations[0] = new DischargingStation();
-	//this->dischargingStations[0]->setWaitingArea(this->waitingArea);
-	//this->dischargingStations[1] = new DischargingStation();
-	//this->dischargingStations[1]->setWaitingArea(this->waitingArea);
-	//this->dischargingStations[2] = new DischargingStation();
-	//this->dischargingStations[2]->setWaitingArea(this->waitingArea);
-}
 
 DischargingArea::~DischargingArea(){
 

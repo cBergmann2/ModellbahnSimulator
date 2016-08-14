@@ -53,21 +53,24 @@ extern "C" void StartArea::taskBehavior(void *parms){
 			switch (emptyLoadingStation){
 			case 0:
 				sA->loadingArea->getLoadingStation(0)->occupieStation();					//Ladestation 1 belegen
+				cout << "Startarea: Bleadestation 1 blockiert" << endl;
 				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_1);								//Weiche in Richtung Ladestation 1 stellen
 
 				break;
 			case 1:
 				sA->loadingArea->getLoadingStation(1)->occupieStation();					//Ladestation 2 belegen
 				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_2);								//Weiche in Richtung Ladestation 2 stellen
+				cout << "Startarea: Bleadestation 2 blockiert" << endl;
 				break;
 			}
 
 			sendTo(START_PLACE_STOP_ACTOR, DEACTIVATE);										//Stop-Aktor des Startbereichs deaktivieren
-
+			cout << "Startarea: Stop-Actor deaktiviert" << endl;
 
 			xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);					//Darauf warten, dass das Fahrzeug den Startbereich verlässt
 			if (recBuffer == START_PLACE_PRESENCE_SENSOR_OUTGOING){
 				sendTo(START_PLACE_STOP_ACTOR, ACTIVATE);									//Stop-Aktor des Startbereics aktivieren
+				cout << "Startarea: Stop-Actor aktiviert" << endl;
 			}
 			else{
 				sA->errorHandling();														//Anderes Kommando empfangen, als erwartet wurde

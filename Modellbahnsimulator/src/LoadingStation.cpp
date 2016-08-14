@@ -42,10 +42,6 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 			
 			switch (ls->GetID()){
 			case 1:
-				sendTo(LOAD_PLACE_1_LOADING_ACTIVITY, 0);		//Beladevorgang starten
-
-				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Ende des Beladevorgangs warten
-
 				sendTo(LOAD_PLACE_1_STOP_ACTOR, DEACTIVATE);	//StopActor deaktivieren
 
 				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Signal der Anlage warten, dass Fahrzeug die Station verlassen hat
@@ -56,10 +52,6 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 				}
 				break;
 			case 2:
-				sendTo(LOAD_PLACE_2_LOADING_ACTIVITY, 0);		//Beladevorgang starten
-
-				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Ende des Beladevorgangs warten
-
 				sendTo(LOAD_PLACE_2_STOP_ACTOR, DEACTIVATE);	//StopActor deaktivieren
 
 				xQueueReceive(ls->mailbox, &recBuffer, portMAX_DELAY);	//Auf Signal der Anlage warten, dass Fahrzeug die Station verlassen hat
@@ -78,7 +70,20 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 }
 
 void LoadingStation::loadingProcedure(){
+	int recBuffer;
+	
+	switch (this->ID){
+	case 1:
+		sendTo(LOAD_PLACE_1_LOADING_ACTIVITY, 0);		//Beladevorgang starten
 
+		xQueueReceive(this->mailbox, &recBuffer, portMAX_DELAY);	//Auf Ende des Beladevorgangs warten
+		break;
+	case 2:
+		sendTo(LOAD_PLACE_2_LOADING_ACTIVITY, 0);		//Beladevorgang starten
+
+		xQueueReceive(this->mailbox, &recBuffer, portMAX_DELAY);	//Auf Ende des Beladevorgangs warten
+		break;
+	}
 }
 
 int LoadingStation::GetID(){
