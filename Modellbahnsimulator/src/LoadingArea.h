@@ -18,13 +18,13 @@ class LoadingArea
 private:
 	PathSection *pathSection;
 	SemaphoreHandle_t semEmptyPlaces;
+	TwoWaySwitch *twoWaySwitch;
+	LoadingStation* laodingStations[2];
+	PathSection *pathToLoadingArea;
 
 public:
 	LoadingArea();
 	virtual ~LoadingArea();
-	TwoWaySwitch *twoWaySwitch;
-	LoadingStation* laodingStations[2];
-	PathSection *pathToLoadingArea;
 	int getEmptyLoadingStation();
 
 	LoadingStation* getLoadingStation(int id);
