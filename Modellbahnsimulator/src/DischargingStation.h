@@ -22,23 +22,22 @@ class  DischargingStation : public Station
 private:
 	int ID;															//Station ID or number
 	WaitingArea *waitingArea;
+	DischargingArea *dischargingArea;
+	QueueHandle_t mailbox;
 
 public:
-	DischargingStation();
 	DischargingStation(int, WaitingArea *waitingArea, DischargingArea*);
 	virtual ~DischargingStation();
 
 	void static taskBehavior(void *parms);
 	void dischargingProcedure();
 	
-	QueueHandle_t mailbox;
 	void setMailbox(QueueHandle_t);
 	QueueHandle_t getMailbox();
 	
 	void setWaitingArea(WaitingArea*);
 	WaitingArea *getWaitingArea();
 
-	DischargingArea *dischargingArea;
 	void setDischargingArea(DischargingArea*);
 	DischargingArea* getDischargingArea();
 };
