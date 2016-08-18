@@ -7,45 +7,42 @@
 
 #include "Station.h"
 
-
+/**************************************************
+Function name:	Konstruktor
+returns:		void
+Created by:		Christoph Bergmann
+Date created:	22.07.2016
+Description:	Funktion initialisiert Varibalen
+**************************************************/
 Station::Station(){
 	occupied = false;
 	semHandle = xSemaphoreCreateCounting(1,1);
 }
-
-
 
 Station::~Station(){
 
 }
 
 
-
-
-
-/**
- * returns value > 0 if function was not successful
- */
+/**************************************************
+Function name:	occupieStation
+returns:		void
+Created by:		Christoph Bergmann
+Date created:	22.07.2016
+Description:	Belegt die Station
+**************************************************/
 void Station::occupieStation(){
 	xSemaphoreTake(semHandle, portMAX_DELAY);
 	this->occupied = true;
 }
 
-
-/**
- * Parameter sensorNumber 0: entry, 1: exit
- */
-void Station::presenceSensorTriggered(int sensorNumber){
-
-}
-
-
-void Station::SetSopActorActive(bool newVal){
-
-	stopActorActive = newVal;
-}
-
-
+/**************************************************
+Function name:	unblockStation
+returns:		void
+Created by:		Christoph Bergmann
+Date created:	22.07.2016
+Description:	Gibt die Station wieder frei
+**************************************************/
 void Station::unblockStation(){
 	this->occupied = false;
 	xSemaphoreGive(semHandle);

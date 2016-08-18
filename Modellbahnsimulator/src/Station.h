@@ -19,24 +19,17 @@
 
 class Station
 {
+private:
+	SemaphoreHandle_t semHandle;
 
 public:
 	Station();
 	virtual ~Station();
 
 	void occupieStation();
-	void presenceSensorTriggered(int sensorNumber);
-	void SetSopActorActive(bool newVal);
 	void unblockStation();
 
 	bool occupied;
-
-private:
-	/**
-	 * Als Semaphore nutzen
-	 */
-	SemaphoreHandle_t semHandle;
-	bool stopActorActive;
 
 };
 #endif // !defined(EA_3E0B59FF_ECA7_473b_B91A_9A66742A4F88__INCLUDED_)
