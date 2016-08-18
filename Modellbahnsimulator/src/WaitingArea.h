@@ -28,7 +28,6 @@ public:
 	~WaitingArea();
 	void static taskBehavior(void *parms);
 	
-	
 	void setMailbox(QueueHandle_t);
 	QueueHandle_t getMailbox();
 	void setScales(Scales*);
