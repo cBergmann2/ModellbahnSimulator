@@ -12,7 +12,7 @@ using namespace std;
 
 
 /**************************************************
-Function name: setMailbox(QueueHandle_t )
+Function name: taskBehavior
 returns: void
 argl: Parameter enthält Instanz der Beladestation
 Created by: Christoph Bergmann

@@ -9,6 +9,14 @@
 
 using namespace std;
 
+/**************************************************
+Function name:	Konstruktor
+returns: 
+argl: 
+Created by:		Christoph Bergmann
+Date created:	22.07.2016
+Description:	Initialisiert die Semaphore
+**************************************************/
 PathSection::PathSection(){
 	semHandle = xSemaphoreCreateBinary();
 
@@ -21,7 +29,14 @@ PathSection::~PathSection(){
 
 }
 
-
+/**************************************************
+Function name:	occupiePath
+returns:
+argl:
+Created by:		Christoph Bergmann
+Date created:	22.07.2016
+Description:	Belegt den Weg
+**************************************************/
 void PathSection::occupiePath(){
 
 	if (xSemaphoreTake(semHandle, portMAX_DELAY) == 0){
@@ -30,7 +45,14 @@ void PathSection::occupiePath(){
 	}
 }
 
-
+/**************************************************
+Function name:	releasePath
+returns:
+argl:
+Created by:		Christoph Bergmann
+Date created:	22.07.2016
+Description:	Gibt den Weg wieder frei
+**************************************************/
 void PathSection::releasePath(){
 	
 	if (xSemaphoreGive(semHandle) == 0){
