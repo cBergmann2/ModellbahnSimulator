@@ -18,6 +18,13 @@
 class LoadingArea;
 class LoadingStation : public Station
 {
+private:
+	int ID;
+	QueueHandle_t mailbox;
+	PathSection *pathToLoadingStations, *pathToScales;
+	DischargingArea *dischargingArea;
+	LoadingArea* loadingArea;
+	Scales *scales;
 
 public:
 	void static taskBehavior(void *parms);
@@ -37,14 +44,5 @@ public:
 	Scales* getScales();
 	void setLoadingArea(LoadingArea*);
 	LoadingArea* getLoadingArea();
-
-private:
-	int ID;
-	QueueHandle_t mailbox;
-	PathSection *pathToLoadingStations, *pathToScales;
-	DischargingArea *dischargingArea;
-	LoadingArea* loadingArea;
-	Scales *scales;
-
 };
 #endif // !defined(EA_6D37D681_4F24_4629_BF46_FDF3AEE1337A__INCLUDED_)

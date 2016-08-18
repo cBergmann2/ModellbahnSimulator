@@ -32,14 +32,14 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 			recBuffer == LOAD_PLACE_2_PRESENCE_SENSOR_INCOMING){
 
 			ls->getPathToLoadingStations()->releasePath();		//Streckenabschnitt zu Beladestationen, inklusive Weiche, freigeben
-			cout << "LoadingStation_" << ls->GetID() << ": Streckenabschnitt zur Bleadestation freigegeben" << endl;
+			//cout << "LoadingStation_" << ls->GetID() << ": Streckenabschnitt zur Bleadestation freigegeben" << endl;
 
 			ls->loadingProcedure();								//Beladevorgang ausführen
 
 			ls->getDischargingArea()->occupiePlaceInDischargingAreaOrWaitingArea();	//Station im Entladebereich reservieren
 			ls->getScales()->occupieStation();										//Waage reservieren
 
-			
+			vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) + 1);	//kritischer Programmabschnitt -> Priorität erhöhen
 			switch (ls->GetID()){
 			case 1:
 				sendTo(LOAD_PLACE_1_STOP_ACTOR, DEACTIVATE);	//StopActor deaktivieren
@@ -48,7 +48,7 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 				if (recBuffer == LOAD_PLACE_1_PRESENCE_SENSOR_OUTGOING){
 					sendTo(LOAD_PLACE_1_STOP_ACTOR, ACTIVATE); //StopActor aktivieren
 					ls->unblockStation();	//Station freigeben
-					cout << "LoadingStation_1: unblock station" << endl;
+					//cout << "LoadingStation_1: unblock station" << endl;
 				}
 				break;
 			case 2:
@@ -58,11 +58,11 @@ extern "C" void LoadingStation::taskBehavior(void *parms){
 				if (recBuffer == LOAD_PLACE_2_PRESENCE_SENSOR_OUTGOING){
 					sendTo(LOAD_PLACE_2_STOP_ACTOR, ACTIVATE); //StopActor aktivieren
 					ls->unblockStation();	//Station freigeben
-					cout << "LoadingStation_2: unblock station" << endl;
+					//cout << "LoadingStation_2: unblock station" << endl;
 				}
 				break;
 			}
-
+			vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) - 1);	//kritischer Programmabschnitt vorbei -> Priorität heruntersetzen
 			ls->loadingArea->unblockPlaceInLoadingArea();	//Platz im Beladebereich freigeben
 		}
 	}
