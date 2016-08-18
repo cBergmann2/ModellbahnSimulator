@@ -18,6 +18,11 @@
 class StartArea : public Station 
 {
 private:
+	xQueueHandle xQHandle;
+	QueueHandle_t mailboxStartArea;
+	PathSection *pSLoadingArea;
+	LoadingArea *loadingArea;
+
 public:
 	void static taskBehavior(void*);
 
@@ -26,11 +31,6 @@ public:
 	void setLoadingArea(LoadingArea*);
 	void errorHandling();
 	
-	xQueueHandle xQHandle;
-	QueueHandle_t mailboxStartArea;
-	PathSection *pSLoadingArea;
-	LoadingArea *loadingArea;
-	LoadingStation loadingStation1, loadingStation2;
 
 };
 #endif // !defined(EA_B806C871_42C6_449b_AEAE_0CEE62310444__INCLUDED_)

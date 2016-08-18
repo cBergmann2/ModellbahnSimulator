@@ -38,43 +38,47 @@ extern "C" void StartArea::taskBehavior(void *parms){
 		xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);						//Auf ankommendes Fahrzeug warten
 		if (recBuffer == START_PLACE_PRESENCE_SENSOR_INCOMING){								
 
-			cout << "Startarea: Fahrzeug eingetroffen" << endl;
+			//cout << "Startarea: Fahrzeug eingetroffen" << endl;
 
 			sA->pSLoadingArea->occupiePath();												//Pfad zur Beladestation belegen
 
-			cout << "Startarea: Streckenabschnitt zur Beladestation blockiert" << endl;
+			//cout << "Startarea: Streckenabschnitt zur Beladestation blockiert" << endl;
 
 			sA->loadingArea->occupiePlaceInLoadingArea();									//Platz im Beladebereich belegen
 
-			cout << "Startarea: Platz in Beladebereich blockiert" << endl;
+			//cout << "Startarea: Platz in Beladebereich blockiert" << endl;
 
 			emptyLoadingStation = sA->loadingArea->getEmptyLoadingStation();				//Leere Beladestation ermitteln
 
 			switch (emptyLoadingStation){
 			case 0:
 				sA->loadingArea->getLoadingStation(0)->occupieStation();					//Ladestation 1 belegen
-				cout << "Startarea: Bleadestation 1 blockiert" << endl;
+				//cout << "Startarea: Bleadestation 1 blockiert" << endl;
 				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_1);								//Weiche in Richtung Ladestation 1 stellen
 
 				break;
 			case 1:
 				sA->loadingArea->getLoadingStation(1)->occupieStation();					//Ladestation 2 belegen
 				sendTo(SWITCH_LOADINGSTATION, LOAD_PLACE_2);								//Weiche in Richtung Ladestation 2 stellen
-				cout << "Startarea: Bleadestation 2 blockiert" << endl;
+				//cout << "Startarea: Bleadestation 2 blockiert" << endl;
 				break;
 			}
 
+			vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) + 1);							//kritischer Programmabschnitt -> Priorität erhöhen
+
 			sendTo(START_PLACE_STOP_ACTOR, DEACTIVATE);										//Stop-Aktor des Startbereichs deaktivieren
-			cout << "Startarea: Stop-Actor deaktiviert" << endl;
+			//cout << "Startarea: Stop-Actor deaktiviert" << endl;
 
 			xQueueReceive(sA->mailboxStartArea, &recBuffer, portMAX_DELAY);					//Darauf warten, dass das Fahrzeug den Startbereich verlässt
 			if (recBuffer == START_PLACE_PRESENCE_SENSOR_OUTGOING){
 				sendTo(START_PLACE_STOP_ACTOR, ACTIVATE);									//Stop-Aktor des Startbereics aktivieren
-				cout << "Startarea: Stop-Actor aktiviert" << endl;
+				//cout << "Startarea: Stop-Actor aktiviert" << endl;
 			}
 			else{
 				sA->errorHandling();														//Anderes Kommando empfangen, als erwartet wurde
 			}
+
+			vTaskPrioritySet(NULL, uxTaskPriorityGet(NULL) - 1);							//kritischer Programmabschnitt vorbei -> Priorität heruntersetzen
 		}
 		else{
 			sA->errorHandling();															//Anderes Kommando empfangen, als erwartet wurde
