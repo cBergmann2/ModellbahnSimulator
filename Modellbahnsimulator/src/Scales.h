@@ -13,6 +13,12 @@ class DischargingArea;
 class WaitingArea;
 class Scales : public Station
 {
+private:
+	xQueueHandle xQHandle;
+	QueueHandle_t mailbox;
+	DischargingArea *dischargingArea;
+	PathSection *pathToStartArea;
+
 public:
 	Scales();
 	void static taskBehavior(void*);
@@ -22,11 +28,6 @@ public:
 
 	void setDischargingArea(DischargingArea*);
 
-	xQueueHandle xQHandle;
-	QueueHandle_t mailboxStartArea;
-	DischargingArea *dischargingArea;
-
-	PathSection *pathToStartArea;
 	PathSection *getPathSectionToStartArea();
 
 	~Scales();
